@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gian Hàng Chợ Số</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      /* Base font smoothing */
+      body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-family: 'Inter', sans-serif;
+        background-color: #F9FAFB; /* gray-50 */
+        color: #1F2937; /* gray-800 */
+      }
+
+      /* Custom, more subtle scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f3f4f6; /* gray-100 */
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #d1d5db; /* gray-300 */
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #9ca3af; /* gray-400 */
+      }
+      
+      /* Utility class to hide scrollbars */
+      .no-scrollbar::-webkit-scrollbar {
+          display: none;
+      }
+      .no-scrollbar {
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
+      }
+
+      /* --- GLOBAL ANIMATIONS & TRANSITIONS --- */
+
+      /* Add smooth transitions to common interactive elements */
+      button, a, [role="button"], input, select, textarea, .card-interactive, .nav-item {
+        transition: all 0.25s ease-in-out;
+      }
+
+      /* Keyframes for animations used across the app */
+      @keyframes fade-in-down {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes pop-in {
+          from {
+              transform: scale(0.9);
+              opacity: 0;
+          }
+          to {
+              transform: scale(1);
+              opacity: 1;
+          }
+      }
+
+      @keyframes slide-in-right {
+          from { transform: translateX(100%); }
+          to { transform: translateX(0); }
+      }
+      
+      @keyframes fade-in {
+          from { opacity: 0; }
+          to { opacity: 1; }
+      }
+      
+      @keyframes pulse {
+        0% {
+          transform: scale(0.95);
+          box-shadow: 0 0 0 0 rgba(29, 78, 216, 0.7);
+        }
+        70% {
+          transform: scale(1);
+          box-shadow: 0 0 0 10px rgba(29, 78, 216, 0);
+        }
+        100% {
+          transform: scale(0.95);
+          box-shadow: 0 0 0 0 rgba(29, 78, 216, 0);
+        }
+      }
+
+
+      /* Utility classes to apply animations */
+      .animate-fade-in-down {
+        animation: fade-in-down 0.5s ease-out forwards;
+      }
+      .animate-pop-in {
+          animation: pop-in 0.3s forwards cubic-bezier(0.165, 0.84, 0.44, 1);
+      }
+      .animate-slide-in-right {
+          animation: slide-in-right 0.4s forwards cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+      .animate-fade-in {
+          animation: fade-in 0.4s ease-in-out forwards;
+      }
+
+      /* --- COMPONENT-SPECIFIC STYLES --- */
+      
+      /* Interactive card hover effect (applied selectively) */
+      .card-interactive:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.15);
+      }
+      
+      /* Enhanced primary button interaction */
+      .btn-primary {
+        background-image: linear-gradient(to right, #10b981, #059669);
+      }
+      .btn-primary:not(:disabled):hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      }
+      .btn-primary:not(:disabled):active {
+        transform: translateY(0);
+        box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+      }
+
+      /* Accessibility: Nicer focus ring */
+      *:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.5); /* Based on emerald-500 */
+        border-radius: 8px;
+      }
+      
+      /* Leaflet popup customization */
+      .leaflet-popup-content-wrapper { border-radius: 0.75rem; box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
+      .leaflet-popup-content { margin: 0; width: auto !important; }
+      .leaflet-popup-content p { margin: 0.5rem 0; }
+      
+      /* User Location Marker */
+      .user-location-marker {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .user-location-marker div {
+        animation: pulse 2s infinite;
+      }
+    </style>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <!-- Leaflet MarkerCluster CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.28.0",
+    "qrcode.react": "https://aistudiocdn.com/qrcode.react@^4.2.0"
+  }
+}
+</script>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+</head>
+  <body class="bg-gray-50">
+    <div id="root"></div>
+    
+    <!-- Leaflet JS (must come before other scripts that use it) -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Leaflet MarkerCluster JS -->
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    
+    <script type="module" src="/index.tsx"></script>
+  </body>
+</html>

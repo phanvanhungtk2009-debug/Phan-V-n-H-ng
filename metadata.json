@@ -1,0 +1,9 @@
+{
+  "name": "Gian Hàng Chợ Số",
+  "description": "An AI-powered e-commerce platform to help ethnic minorities and people in highland areas sell local specialties online, using AI for product recognition, description generation, and market analysis.",
+  "requestFramePermissions": [
+    "geolocation",
+    "camera",
+    "microphone"
+  ]
+}
