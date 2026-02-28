@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 import Sidebar from './components/Sidebar';
@@ -11,13 +12,14 @@ import InteractiveMap from './components/InteractiveMap';
 import ModelViewer from './components/ModelViewer';
 import MobileHeader from './components/MobileHeader';
 import RatingForm from './components/RatingForm';
-import { VoiceChatbot, chatbotAvatar } from './components/VoiceChatbot';
+import { VoiceChatbot, chatbotAvatar, ChatbotPersona, DEFAULT_PERSONA, A_MI_PERSONA } from './components/VoiceChatbot';
 import { AppView, UserRole, Seller, Product, CartItem, Order, OrderStatus, Rating } from './types';
 import RecentlyViewed from './components/RecentlyViewed';
 import PaymentGateway from './components/PaymentGateway';
 import BottomNavBar from './components/BottomNavBar';
 import ExploreView from './components/ExploreView';
 import AccountView from './components/AccountView';
+import HighlandGuideView from './components/HighlandGuideView';
 
 // DUMMY DATA for initial state
 const DUMMY_PRODUCTS: Product[] = [
@@ -89,7 +91,11 @@ const App = () => {
     const [productToEdit, setProductToEdit] = React.useState<Product | null>(null);
     const [productToView3D, setProductToView3D] = React.useState<Product | null>(null);
     const [productToRate, setProductToRate] = React.useState<Product | null>(null);
+    
+    // Chatbot State
     const [isChatbotOpen, setIsChatbotOpen] = React.useState(false);
+    const [chatbotPersona, setChatbotPersona] = React.useState<ChatbotPersona>(DEFAULT_PERSONA);
+
     const [selectedProduct, setSelectedProduct] = React.useState<Product | null>(null);
     const [recentlyViewedProducts, setRecentlyViewedProducts] = React.useState<Product[]>(() => {
         const saved = localStorage.getItem('recentlyViewed');
@@ -276,6 +282,16 @@ const App = () => {
     const handleCloseDetailPanel = () => {
         setSelectedProduct(null);
     };
+    
+    const handleOpenStandardChatbot = () => {
+        setChatbotPersona(DEFAULT_PERSONA);
+        setIsChatbotOpen(true);
+    };
+
+    const handleOpenHighlandGuideChat = () => {
+        setChatbotPersona(A_MI_PERSONA);
+        setIsChatbotOpen(true);
+    };
 
     const renderCurrentView = () => {
         const isMapView = currentView === AppView.MAP_VIEW;
@@ -325,6 +341,8 @@ const App = () => {
                         onSelectProduct={handleSelectProduct}
                         onCloseDetailPanel={handleCloseDetailPanel}
                     />;
+                case AppView.HIGHLAND_GUIDE:
+                    return <HighlandGuideView onStartChat={handleOpenHighlandGuideChat} />;
                 default:
                     return <div>View not found</div>;
             }
@@ -347,6 +365,7 @@ const App = () => {
             [AppView.ACCOUNT]: 'Tài Khoản',
             [AppView.SELLER_DASHBOARD]: 'Trang Bán Hàng',
             [AppView.PRODUCT_LISTER]: 'Đăng Sản Phẩm',
+            [AppView.HIGHLAND_GUIDE]: 'Hướng Dẫn Viên Vùng Cao',
         };
         return viewTitles[currentView] || 'Gian Hàng Chợ Số';
     };
@@ -390,14 +409,14 @@ const App = () => {
             )}
             
             <button
-                onClick={() => setIsChatbotOpen(true)}
+                onClick={handleOpenStandardChatbot}
                 className="fixed bottom-20 right-4 md:bottom-6 md:right-6 w-14 h-14 bg-emerald-600 rounded-full shadow-lg text-white flex items-center justify-center z-40 hover:bg-emerald-700 transition-transform hover:scale-110 btn-primary"
                 aria-label="Mở trợ lý ảo"
             >
                 <img src={chatbotAvatar.image} alt="Chatbot Avatar" className="w-12 h-12 rounded-full object-cover"/>
             </button>
 
-            {isChatbotOpen && <VoiceChatbot onClose={() => setIsChatbotOpen(false)} />}
+            {isChatbotOpen && <VoiceChatbot onClose={() => setIsChatbotOpen(false)} persona={chatbotPersona} />}
         </div>
     );
 };

@@ -1,3 +1,4 @@
+
 export enum AppView {
   SELLER_DASHBOARD = 'seller-dashboard',
   SELLER_AUTH = 'seller-auth',
@@ -8,6 +9,7 @@ export enum AppView {
   CART = 'cart',
   EXPLORE = 'explore',
   ACCOUNT = 'account',
+  HIGHLAND_GUIDE = 'highland-guide',
 }
 
 export enum UserRole {

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { AppView, UserRole, Seller } from '../types';
 
@@ -119,11 +120,13 @@ const MapIcon = (props: React.SVGProps<SVGSVGElement>) => ( <svg xmlns="http://w
 const GlobeIcon = (props: React.SVGProps<SVGSVGElement>) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}> <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" /> </svg> );
 const SparklesIcon = (props: React.SVGProps<SVGSVGElement>) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}> <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.898 20.562L16.25 21.75l-.648-1.188a2.25 2.25 0 01-1.4-1.4l-1.188-.648 1.188-.648a2.25 2.25 0 011.4-1.4l.648-1.188.648 1.188a2.25 2.25 0 011.4 1.4l1.188.648-1.188.648a2.25 2.25 0 01-1.4 1.4z" /> </svg> );
 const ShoppingCartIcon = (props: React.SVGProps<SVGSVGElement>) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}> <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.343 1.087-.835l1.821-6.831A1.125 1.125 0 0018.141 5H4.897M5.25 7.5h13.5M7.5 14.25v-6.375" /> </svg> );
+const GuideIcon = (props: React.SVGProps<SVGSVGElement>) => ( <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}> <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /> <path strokeLinecap="round" strokeLinejoin="round" d="M12 14.25a6 6 0 016-6 6 6 0 01-6 6 6 6 0 01-6-6z" /> </svg> );
 
 
 const Sidebar = ({ currentView, setCurrentView, cartItemCount, currentUserRole, setCurrentUserRole, currentSeller, onLogout }: SidebarProps) => {
   const allNavItems: NavItemType[] = [
     { view: AppView.SELLER_DASHBOARD, icon: <StoreIcon />, text: 'Trang Bán Hàng', roles: [UserRole.SELLER] },
+    { view: AppView.HIGHLAND_GUIDE, icon: <GuideIcon />, text: 'Hướng Dẫn Viên', roles: [UserRole.BUYER, UserRole.SELLER] },
     { view: AppView.MAP_VIEW, icon: <MapIcon />, text: 'Bản Đồ Đặc Sản', roles: [UserRole.BUYER, UserRole.SELLER] },
     { view: AppView.INTERACTIVE_MAP, icon: <GlobeIcon />, text: 'Bản Đồ Tương Tác', roles: [UserRole.BUYER, UserRole.SELLER] },
     { view: AppView.PRODUCT_GALLERY, icon: <SparklesIcon />, text: 'Sản Phẩm', roles: [UserRole.BUYER, UserRole.SELLER] },

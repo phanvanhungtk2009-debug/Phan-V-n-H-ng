@@ -1,12 +1,36 @@
+
 import React from 'react';
 import { GoogleGenAI, LiveSession, LiveServerMessage, Modality, Blob as GenAIBlob, FunctionDeclaration, Type } from "@google/genai";
 import Spinner from './common/Spinner';
 import ChatMap from './common/ChatMap';
 
-// FIX: Replaced the corrupted base64 string with a valid, clean one to fix a critical parsing error.
-// The new image is a more appropriate headshot for the avatar button.
+// Standard Avatar
 export const chatbotAvatar = {
   image: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYxIDY0LjE0MDk0OSwgMjAxMC8xMi8wNy0xMDo1NzowMSAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNS4xIE1hY2ludG9zaCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDpFNzJFRDc4MTc3NDYxMUU4OEQ0REU5M0JCRjE0M0U0MSIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDpFNzJFRDc4Mjc3NDYxMUU4OEQ0REU5M0JCRjE0M0U0MSI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkU3MkVENDgwNzc0NjExRTg4RDRESUkzQkJGMTQzRTQxIiBzdFJlZjjpkb2N1bWVudElEPSJ4bXAuZGlkOkU3MkVENDgxNzc0NjExRTg4RDRESUkzQkJGMTQzRTQxIi8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+P+q+DQAAAM1UExURf///9ra2tDQ0M7Ozr+/v7y8vKurq6WlpZmZmWVlZWBgYE5OTkdHR0BAQDw8PDg4ODIyMjAwMCgoKCQkJCAgIBwcHBgYGBQUFBQUFBgYGBsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsbGxsAAAAbx5gxwAAARNJREFUeNpiYCAeMDD8Z2BgYGBgYWBgYGRkYkDyAAl2BsY/BgYGFgaG/3xMDCwsLCh8/v//z8LCh8uPDg4KZQAAc8YnBgYGBiaG//8zMP5nYmJiamLE8P//f0YWBgZGRkb+jAwMDAwsDMz/WVhYWDgY/PIAAcbx/wPjfyYGEAZmBiAGhgZgYmAJaGAY/g+A/f///w+AGAsDAwODAwMDA4MIAzMDYyAGBgYWBv4PCwsg7PHBCQYGJkYGBsY/BoYWRiAmBuY/BoY/DAxsDCh8/P//Z2BgZGBkZGRgYGBkYEBgYGBgZWBgYGFgZmBiYGFgYGBkYmJgYmBgYGBhZWVgYGBhYGFgYWBgYGZgYGBhYGBgZWBgYGFgYGBmYGBg4AIAAgwAqQYEWpL0FfgAAAAASUVORK5CYII="
+};
+
+// Persona definition interface
+export interface ChatbotPersona {
+    name: string;
+    avatarUrl: string;
+    systemInstruction: string;
+    welcomeMessage?: string;
+}
+
+// Default Persona
+export const DEFAULT_PERSONA: ChatbotPersona = {
+    name: "Trợ lý Du Lịch AI",
+    avatarUrl: chatbotAvatar.image,
+    systemInstruction: 'Bạn là một trợ lý ảo du lịch thân thiện, chuyên gia về các sản phẩm và văn hóa địa phương Việt Nam. Bạn có hai công cụ đặc biệt: showOnMap để hiển thị vị trí trên bản đồ và createTravelItinerary để tạo lịch trình du lịch. Khi người dùng yêu cầu hiển thị một địa điểm, hãy sử dụng công cụ showOnMap. Khi người dùng muốn có một kế hoạch du lịch, hãy thu thập các thông tin cần thiết (thời gian, sở thích, ngân sách) và sử dụng công cụ createTravelItinerary. Luôn trả lời bằng tiếng Việt.',
+    welcomeMessage: "Xin chào! Bạn cần giúp gì về chuyến đi?"
+};
+
+// A Mi Persona
+export const A_MI_PERSONA: ChatbotPersona = {
+    name: "A Mị - Hướng Dẫn Viên",
+    avatarUrl: "https://images.unsplash.com/photo-1526485856375-9110812f620a?q=80&w=256&h=256&auto=format&fit=crop", // A placeholder for an ethnic girl
+    systemInstruction: "Bạn là A Mị, một cô gái người dân tộc H'Mông vui vẻ, chân thật và am hiểu văn hóa vùng cao Tây Bắc Việt Nam. Bạn nói chuyện với giọng điệu mộc mạc, thân thiện, sử dụng từ ngữ gần gũi (ví dụ: 'cái bụng ưng lắm', 'chim ưng', 'bà con'). Nhiệm vụ của bạn là giới thiệu về các đặc sản (mật ong, vải thổ cẩm, dược liệu), kể những câu chuyện văn hóa, phong tục thú vị và gợi ý du lịch bản địa cho du khách. Bạn yêu quê hương mình và muốn mọi người biết đến vẻ đẹp của nó. Khi được hỏi về địa điểm, hãy dùng tool showOnMap.",
+    welcomeMessage: "Chào cái bụng của bạn nha! Mình là A Mị đây. Bạn muốn nghe chuyện về bản làng hay tìm đặc sản gì không?"
 };
 
 enum ChatbotStatus {
@@ -111,17 +135,15 @@ async function decodeAudioData(
   return buffer;
 }
 
-export const VoiceChatbot = ({ onClose }: { onClose: () => void }) => {
+interface VoiceChatbotProps {
+    onClose: () => void;
+    persona?: ChatbotPersona;
+}
+
+export const VoiceChatbot = ({ onClose, persona = DEFAULT_PERSONA }: VoiceChatbotProps) => {
     const [status, setStatus] = React.useState<ChatbotStatus>(ChatbotStatus.IDLE);
-    const [transcript, setTranscript] = React.useState<TranscriptEntry[]>(() => {
-        try {
-            const savedTranscript = localStorage.getItem('chatbotTranscript');
-            return savedTranscript ? JSON.parse(savedTranscript) : [];
-        } catch (e) {
-            console.error("Failed to parse transcript from localStorage", e);
-            return [];
-        }
-    });
+    // Don't persist transcript across different personas effectively for this demo, or clear on persona change
+    const [transcript, setTranscript] = React.useState<TranscriptEntry[]>([]); 
     const [error, setError] = React.useState<string | null>(null);
 
     const sessionPromiseRef = React.useRef<Promise<LiveSession> | null>(null);
@@ -134,7 +156,6 @@ export const VoiceChatbot = ({ onClose }: { onClose: () => void }) => {
         setError(null);
         
         try {
-            // FIX: Cast window to `any` to allow access to vendor-prefixed `webkitAudioContext` for Safari compatibility.
             audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)({ sampleRate: 16000 });
             const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
             audioStreamRef.current = stream;
@@ -170,7 +191,6 @@ export const VoiceChatbot = ({ onClose }: { onClose: () => void }) => {
                                 const last = prev[prev.length - 1];
                                 const text = message.serverContent!.outputTranscription!.text;
                                 if (last?.speaker === 'bot' && last.type === 'text') {
-                                    // FIX: Avoid state mutation. Create a new object for the updated transcript entry.
                                     return [...prev.slice(0, -1), { ...last, text: last.text + text }];
                                 }
                                 return [...prev, { type: 'text', speaker: 'bot', text: text }];
@@ -180,7 +200,6 @@ export const VoiceChatbot = ({ onClose }: { onClose: () => void }) => {
                                 const last = prev[prev.length - 1];
                                 const text = message.serverContent!.inputTranscription!.text;
                                 if (last?.speaker === 'user' && last.type === 'text') {
-                                    // FIX: Avoid state mutation. Create a new object for the updated transcript entry.
                                     return [...prev.slice(0, -1), { ...last, text: last.text + text }];
                                 }
                                 return [...prev, { type: 'text', speaker: 'user', text: text }];
@@ -228,7 +247,7 @@ export const VoiceChatbot = ({ onClose }: { onClose: () => void }) => {
                     outputAudioTranscription: {},
                     inputAudioTranscription: {},
                     tools: [{ functionDeclarations: [showOnMapFunctionDeclaration, createTravelItineraryFunctionDeclaration] }],
-                    systemInstruction: 'Bạn là một trợ lý ảo du lịch thân thiện, chuyên gia về các sản phẩm và văn hóa địa phương Việt Nam. Bạn có hai công cụ đặc biệt: showOnMap để hiển thị vị trí trên bản đồ và createTravelItinerary để tạo lịch trình du lịch. Khi người dùng yêu cầu hiển thị một địa điểm, hãy sử dụng công cụ showOnMap. Khi người dùng muốn có một kế hoạch du lịch, hãy thu thập các thông tin cần thiết (thời gian, sở thích, ngân sách) và sử dụng công cụ createTravelItinerary. Luôn trả lời bằng tiếng Việt.',
+                    systemInstruction: persona.systemInstruction,
                 },
             });
         } catch (err) {
@@ -236,7 +255,7 @@ export const VoiceChatbot = ({ onClose }: { onClose: () => void }) => {
             setError('Không thể truy cập micro. Vui lòng cấp quyền và thử lại.');
             setStatus(ChatbotStatus.ERROR);
         }
-    }, []);
+    }, [persona.systemInstruction]);
     
     const stopConversation = React.useCallback(() => {
         sessionPromiseRef.current?.then(session => session.close());
@@ -263,14 +282,6 @@ export const VoiceChatbot = ({ onClose }: { onClose: () => void }) => {
     }, [startConversation, stopConversation]);
 
     React.useEffect(() => {
-        try {
-            localStorage.setItem('chatbotTranscript', JSON.stringify(transcript));
-        } catch (e) {
-            console.error("Failed to save transcript to localStorage", e);
-        }
-    }, [transcript]);
-
-    React.useEffect(() => {
         transcriptEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [transcript]);
 
@@ -281,7 +292,7 @@ export const VoiceChatbot = ({ onClose }: { onClose: () => void }) => {
             case ChatbotStatus.PROCESSING:
                 return <div className="flex items-center gap-2"><Spinner /><span>Đang xử lý...</span></div>;
             case ChatbotStatus.SPEAKING:
-                 return <div className="flex items-center gap-2"><div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div><span>Trợ lý đang nói...</span></div>;
+                 return <div className="flex items-center gap-2"><div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div><span>A Mị đang nói...</span></div>;
             case ChatbotStatus.ERROR:
                 return <div className="flex items-center gap-2 text-red-500"><div className="w-2 h-2 bg-red-500 rounded-full"></div><span>Lỗi</span></div>;
             default:
@@ -291,12 +302,12 @@ export const VoiceChatbot = ({ onClose }: { onClose: () => void }) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-60 z-50 flex justify-center items-center p-4 backdrop-blur-sm" onClick={onClose}>
-            <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg h-[80vh] max-h-[600px] flex flex-col animate-pop-in" onClick={e => e.stopPropagation()}>
-                <header className="flex items-center justify-between p-4 border-b">
+            <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg h-[80vh] max-h-[600px] flex flex-col animate-pop-in border-4 border-emerald-500/20" onClick={e => e.stopPropagation()}>
+                <header className="flex items-center justify-between p-4 border-b bg-emerald-50 rounded-t-lg">
                     <div className="flex items-center gap-3">
-                        <img src={chatbotAvatar.image} alt="Avatar" className="w-10 h-10 rounded-full object-cover"/>
+                        <img src={persona.avatarUrl} alt="Avatar" className="w-12 h-12 rounded-full object-cover border-2 border-emerald-500"/>
                         <div>
-                            <h2 className="font-bold text-gray-800">Trợ lý Du Lịch AI</h2>
+                            <h2 className="font-bold text-gray-800 text-lg">{persona.name}</h2>
                             <div className="text-sm text-gray-500">{getStatusIndicator()}</div>
                         </div>
                     </div>
@@ -307,32 +318,31 @@ export const VoiceChatbot = ({ onClose }: { onClose: () => void }) => {
                     </button>
                 </header>
 
-                <main className="flex-1 p-4 overflow-y-auto bg-gray-50">
+                <main className="flex-1 p-4 overflow-y-auto bg-gray-50/50">
                     <div className="space-y-4">
                         {transcript.length === 0 && status !== ChatbotStatus.ERROR && (
-                            <div className="text-center text-gray-500 pt-10">
-                                <p className="font-semibold">Xin chào! Bạn cần giúp gì về chuyến đi?</p>
-                                <p className="text-sm">Hãy hỏi tôi về địa điểm hoặc yêu cầu một lịch trình.</p>
+                            <div className="text-center text-gray-500 pt-10 px-6">
+                                <p className="font-semibold text-lg text-emerald-800">{persona.welcomeMessage || "Xin chào!"}</p>
+                                <p className="text-sm mt-2">Hãy bật mic và nói chuyện với tôi nhé.</p>
                             </div>
                         )}
                         {transcript.map((entry, index) => {
                             if (entry.type === 'map') {
                                 return (
                                     <div key={index} className="flex items-end gap-2 justify-start">
-                                        <img src={chatbotAvatar.image} alt="bot avatar" className="w-6 h-6 rounded-full self-start flex-shrink-0" />
-                                        <div className="max-w-[80%] p-3 rounded-2xl bg-gray-200 text-gray-800 rounded-bl-lg w-full">
+                                        <img src={persona.avatarUrl} alt="bot avatar" className="w-8 h-8 rounded-full self-start flex-shrink-0 border border-gray-200" />
+                                        <div className="max-w-[85%] p-3 rounded-2xl bg-white shadow-sm border border-gray-100 text-gray-800 rounded-bl-none w-full">
                                             <p className="text-sm font-semibold mb-2">{entry.data.title}</p>
                                             <ChatMap lat={entry.data.latitude} lng={entry.data.longitude} title={entry.data.title} />
                                         </div>
                                     </div>
                                 );
                             }
-                            // Otherwise, it's a text entry
                             return (
                                 <div key={index} className={`flex items-end gap-2 ${entry.speaker === 'user' ? 'justify-end' : 'justify-start'}`}>
-                                    {entry.speaker === 'bot' && <img src={chatbotAvatar.image} alt="bot avatar" className="w-6 h-6 rounded-full self-start flex-shrink-0" />}
-                                    <div className={`max-w-[80%] p-3 rounded-2xl ${entry.speaker === 'user' ? 'bg-emerald-600 text-white rounded-br-lg' : 'bg-gray-200 text-gray-800 rounded-bl-lg'}`}>
-                                        <p className="text-sm whitespace-pre-wrap">{entry.text}</p>
+                                    {entry.speaker === 'bot' && <img src={persona.avatarUrl} alt="bot avatar" className="w-8 h-8 rounded-full self-start flex-shrink-0 border border-gray-200" />}
+                                    <div className={`max-w-[85%] p-3 rounded-2xl shadow-sm ${entry.speaker === 'user' ? 'bg-emerald-600 text-white rounded-br-none' : 'bg-white border border-gray-100 text-gray-800 rounded-bl-none'}`}>
+                                        <p className="text-sm whitespace-pre-wrap leading-relaxed">{entry.text}</p>
                                     </div>
                                 </div>
                             );
@@ -359,8 +369,8 @@ export const VoiceChatbot = ({ onClose }: { onClose: () => void }) => {
                     </div>
                 </main>
 
-                <footer className="p-4 border-t text-center">
-                    <button onClick={stopConversation} className="bg-red-500 text-white font-bold py-2 px-6 rounded-full hover:bg-red-600 transition-colors">
+                <footer className="p-4 border-t text-center bg-white rounded-b-lg">
+                    <button onClick={stopConversation} className="bg-red-50 text-red-600 border border-red-200 font-bold py-2 px-6 rounded-full hover:bg-red-100 transition-colors text-sm">
                         Kết thúc cuộc trò chuyện
                     </button>
                 </footer>

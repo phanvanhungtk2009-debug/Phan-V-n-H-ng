@@ -1,27 +1,6 @@
 import React from 'react';
 import { Product } from '../types';
 
-// Fix: Add a global declaration for the 'model-viewer' custom element to inform TypeScript about its existence and props, resolving JSX intrinsic element errors.
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'model-viewer': React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElement> & {
-          src?: string;
-          alt?: string;
-          'camera-controls'?: boolean;
-          'auto-rotate'?: boolean;
-          ar?: boolean;
-          'shadow-intensity'?: string;
-          slot?: string;
-          style?: React.CSSProperties;
-        },
-        HTMLElement
-      >;
-    }
-  }
-}
-
 interface ModelViewerProps {
   product: Product;
   onClose: () => void;
@@ -74,6 +53,7 @@ const ModelViewer = ({ product, onClose, onAddToCart }: ModelViewerProps) => {
         <div className="flex-grow grid grid-cols-1 lg:grid-cols-3 gap-8 min-h-0">
             {/* Model Viewer */}
             <div className="lg:col-span-2 w-full h-full min-h-[50vh] lg:min-h-0 rounded-lg overflow-hidden relative">
+                {/* @ts-ignore */}
                 <model-viewer
                     src={product.modelUrl}
                     alt={`Mô hình 3D của ${product.productName}`}
@@ -91,6 +71,7 @@ const ModelViewer = ({ product, onClose, onAddToCart }: ModelViewerProps) => {
                      <div className="absolute bottom-4 left-4 bg-black bg-opacity-50 text-white text-xs px-3 py-1.5 rounded-lg">
                         Kéo để xoay | Chụm để thu phóng | Sử dụng nút AR (góc phải) trên thiết bị hỗ trợ
                      </div>
+                {/* @ts-ignore */}
                 </model-viewer>
             </div>
 
